@@ -1,0 +1,59 @@
+---------Install
+sudo dnf install -y dnf-plugins-core
+
+sudo dnf config-manager --add-repo https://rpm.releases .hashicorp.com/fedora/hashicorp.repo
+
+sudo dnf -y устанавливает terraform
+
+---------Command
+----State
+terraform state <subcommand> [options] [args]
+
+*command:
+list
+mv
+pull
+push
+rm
+show
+replace-provider
+
+----Workspace (окружение)
+terraform workspace [new, list, show, select, delete]
+new - создать новый
+list - посмотреть список (проверяются стейт файлы)
+select - выбрать, с которым будем работать
+show - показать название текущего
+delete - удалить
+
+
+terraform init
+
+terraform workspace new stage
+
+terraform workspace new prod
+
+terraform plan
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+create_before_destroy - создать новый ресурс, перед удалением старого, если нет возможности обновить ресурс без пересоздания
+prevent_destroy - запретить удалять ресурс
+ignore_changes - не обращать внимания при планировании изменений на указанные свойства ресурсов.

@@ -1,0 +1,70 @@
+yc init
+
+token =
+
+yc vpc network create --name net
+
+yc vpc subnet create --name packer-subnet-a --range 10.1.2.0/24 --network-name net --description "my first subnet via yc"
+
+yc vpc network get net | grep "^id:"    ===== не обязательно
+
+yc vpc subnet get my-subnet-a | grep "^id:"  ===== не обязательно
+
+
+
+cd packer/
+
+yc compute image list
+
+packer validate centos-7-base.json
+
+packer build centos-7-base.json
+
+yc compute image list
+
+!!!get image id and set in ./terraform/variables.tf
+
+
+yc vpc subnet delete --id <id_subnet> && yc vpc network delete --id <id_network>
+
+cd ./../terraform
+
+yc iam key create --folder-name default --service-account-name service --output key.json
+
+yc config profile create my-bot--profile
+
+yc config set service-account-key key.json
+
+yc iam create-token
+
+
+
+cd ./../terraform
+
+terraform init
+
+terraform validate
+
+terraform plan
+
+terraform apply -auto-approve
+
+
+
+cd ./../ansible
+
+ansible-playbook provision.yml 
+
+ssh centos@51.250.68.147
+
+terraform destroy -auto-approve
+
+yc compute image delete --id <id_image>
+
+
+
+
+Доп. команды
+curl -X POST http://admin:admin@ip:9090/-/reload
+sudo docker-compose stop prometheus
+sudo docker-compose up -d

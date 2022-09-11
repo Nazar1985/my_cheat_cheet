@@ -1,0 +1,18 @@
+# Nginx as a Service & Updating a Custom Build
+# after instal from sources
+
+cd /etc/init.d/
+wget https://raw.githubusercontent.com/JasonGiedymin/nginx-init-ubuntu/master/nginx
+echo "NGINX_CONF_FILE=/etc/nginx/nginx.conf" > /etc/default/nginx
+echo "DAEMON=/usr/bin/nginx" >> /etc/default/nginx
+sudo chmod +x nginx
+update-rc.d -f nginx defaults
+service nginx status
+service nginx start
+
+
+
+# Updating Nginx whithout stop
+wget http://nginx.org/download/nginx-1.8.0.tar.gz
+
+

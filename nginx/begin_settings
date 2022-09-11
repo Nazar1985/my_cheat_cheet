@@ -1,0 +1,14 @@
+server {
+  listen 80;
+  server_name mysite.com;
+  
+  root /<name_my_site>/site/http;
+  index index.php index.html;
+
+
+
+  # URI location
+  location / {
+    try_files $uri $uri/ /index.php?$args;
+  }
+}

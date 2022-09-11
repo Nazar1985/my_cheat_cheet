@@ -1,0 +1,20 @@
+# Uninstall old version
+sudo dnf remove docker docker-client docker-client-latest docker-common docker-latest docker-latest-logrotate docker-logrotate \
+                  docker-selinux docker-engine-selinux docker-engine
+
+# install using repository.
+# Set up the repository
+sudo dnf -y install dnf-plugins-core
+sudo dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
+
+# install Docker Engine
+sudo dnf install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+
+# if has conflict ON VPN and try:
+sudo dnf install --allowerasing docker-ce docker-ce-cli containerd.io docker-compose-plugin
+
+# start docker
+sudo systemctl start docker
+
+# DOC 
+# https://docs.docker.com/engine/install/fedora/#prerequisites

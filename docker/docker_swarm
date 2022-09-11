@@ -1,0 +1,114 @@
+# add role manager
+docker node promote <node name>
+
+# del role manager
+docker node demote <node name>
+
+
+# Add replica service
+docker service update --replicas=3 my-service
+
+# Rejection of changes (last modified config)
+docker service rollback my-service
+
+# ports:
+# TCP 2377 - для обеспечения связи с целью управления кластером
+# TCP & UDP 7946 - для связи между нодами
+# UDP 4789 - для трафика overlay-сети.
+
+# инициализация кластера. automatic set manager
+docker swarm init --advertise-addr <internal ip address>
+
+# To add worker to this swarm
+docker swarm join --token <token> <internal ip address>:2377
+
+
+# Для вывода актуальных ключей для добавления нод в кластер.
+docker swarm join-token -q manager
+docker swarm join-token -q worker
+
+
+# Просмотр и обновление сертификатов кластера.
+docker swarm ca --rotate
+
+
+# Перед удалением ноды из кластера нужно очистить ноду от запущенных на ней сервисов.
+docker node update --availability drain node01
+
+# удаление ноды из кластера. 
+docker swarm leave
+
+#
+docker node |ls, promote, demote, inspect, ps, rm, update| <name hosts через пробел>
+
+# набор команд для упарвления сервисами и их свойствами, работающими в Docker Swarm кластере.
+docker service |create inspect logs ps ls rollback rm scale update| 
+# пример: Добавление сервиса nginx  в количестве 3-х реплик и определение критериев для целевых нод
+docker service create \
+    --name web \
+    --replicas 3 \
+    --replicas-max-per-node 1 \
+    --constraint node.platform.linux==linux \
+    nginx:alpine
+
+
+# набор команд для управления сервисами и их свойствами, в формате идентичном Docker Compose, но для Docker Swarm кластера.
+docker stack |deploy ls ps rm services|
+# Пример: Деплой сервиса nginx с использованием конфиг-го Compose файла.
+docker stack deploy --compose-file docker-compose.yml nginx <-- название нашего стека микросервисов
+docker stack rm netology
+
+
+
+
+
+# Авторизация в Yandex.Cloud
+yc init
+token = 
+
+
+# Создаем сетиь и подсеть, чтобы собрать образ ОС с помощью Packer и запускаем сборку образа
+yc vpc network create --name net
+yc vpc subnet create --name my-subnet-a --range 10.1.2.0/24 --network-name net --description "my first subnet via yc"
+cd packer/
+# в файл centos-7-base.json
+# внести "folder_id"
+# внести "subnet_id"
+# внести "token"
+packer validate centos-7-base.json
+packer build centos-7-base.json
+yc compute image list
+# внести id созданного image centos в файл variables.tf, а также id облака и id каталога
+# id cloud = b1gu1gt5nqi6lqgu3t7s
+# id folder = b1gf6m5m4hmidrjmemhe
+cd ./../terraform
+vim ./variables.tf 
+
+
+# Удаляем сеть и подсеть, которую использовали для сборки образа ОС.
+yc vpc subnet delete --id e9b8ec7hf4jeijunok99 && yc vpc network delete --id enp5is7aen89e2avk7vr
+# добавить сервисный аккаунт service и назначить роль admin & editor
+yc config profile create service
+yc iam key create --folder-name default --service-account-name service --output key.json
+yc config set service-account-key key.json
+
+
+# Создаем 6 витруальных машин с помощью Terraform 
+# включить VPN для Terraform
+terraform init
+terraform validate
+terraform plan
+terraform apply -auto-approve
+
+# Создаем Docker Swarm кластер из виртуальных машин, созданных на предыдущем шаге.
+# Запускаем деплой стека приложений 
+# Проводим стресс тест Docker Swarm кластера
+# войти на лидер и ребутнуть Leader
+
+# Удаляем всё, чтобы не тратить деньги!
+terraform destroy -auto-approve
+yc compute image delete --id fd8ckm3ameoacn8aebjq
+
+
+# Проштудировать что это за команда и для чего она.
+docker swarm update --autolock=true

@@ -1,0 +1,63 @@
+пишу файл docker-compos.yaml
+
+version: '3.8'
+
+services:
+  
+  mysql:
+    image: mysql:8
+    container_name: mysql
+    volumes:
+      - ./test_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin
+      MYSQL_HOST: 127.0.0.1
+    restart: always
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+
+> docker-compose up
+
+docker exec -it mysql mysql -p
+
+после этого попадаю сразу в mysql в контейнере
+
+CREATE DATABASE test_db;
+
+выхожу из консоли и захожу в bash контейнера
+
+docker exec -it mysql bash -p
+
+восстановление базы данных из бэкапа
+mysql -p test_db < ~/test_dump.sql
+
+выхожу из контейнера (bash) и возвращаюсь в консоль mysql
+
+дальше по заданию
+
+
+
+
+\h
+
+status;
+
+use test_db;
+
+show tables;
+
+SELECT * FROM orders WHERE price > 300;
+
+
+CREATE USER "test" WITH PASSWORD 'test-pass';
+
+
+
+
+

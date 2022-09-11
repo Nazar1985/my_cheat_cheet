@@ -1,0 +1,147 @@
+# install on ubuntu-14.10
+sudo apt-get install nginx
+
+
+# install on server typo REDHAT
+sudo yum install epel-release
+sudo yum update
+sudo yum install nginx
+sudo nginx -v
+service nginx status
+service nginx start
+
+
+# install nginx on ubuntu-14.10 from source_file
+sudo apt-get update
+sudo apt-get install build-essential
+wget http://nginx.org/download/nginx-1.22.0.tar.gz
+tar -zxvt nginx-1.20.0.tar.gz
+cd nginx-1.20.0/
+sudo apt-get install libpcre3 libpcre3-dev libpcrecpp0 libssl-dev zlib1g-dev
+
+	             libpcre3 libpcre3-dev libpcrecpp0 - for support regex in nginx config files
+                     libssl-dev                        - for ssl and https released 
+                     zlib1g-dev                        - for compression static resources
+./configure
+--sbin-path=/usr/local/nginx/nginx 
+--conf-path=/etc/nginx/nginx.conf
+--error-log-path=/var/log/nginx/error.log
+--http-log-path=/var/log/nginx/access.log
+--pid-path=/usr/local/nginx/nginx.pid
+--with-http_ssl_module
+--with-debug
+--with-pcre
+--with-zlib
+
+make
+sudo make install
+
+
+"""
+--sbin-path=/usr/local/nginx/nginx                             - Имя исполняемого файла NGINX, который используется только во время установки.
+--conf-path=/usr/local/nginx/nginx.conf                        - Имя файла конфигурации NGINX. Однако вы всегда можете переопределить это значение при запуске, указав другой файл с параметром -c <FILENAME> в командной строке nginx.
+								 По умолчанию: **conf/nginx.conf
+--error-log-path=/var/log/nginx/error.log		       - размещение файла лога ошибок
+--http-log-path=/var/log/nginx/access.log                      - размещение лога 
+--pid-path=/usr/local/nginx/nginx.pid                          - размещение файла процесса
+--with-http_ssl_module                                         - для использования ssl
+--with-debug                                                   - для расширенного лога ошибок (мое предположение)
+--with-pcre                                                    - использоватя возможности регулярных выражений при создании файлов конфигурации
+--with-zlib                                                    - для применения сжатия статических ресурсов
+
+# uncnown
+--without-http_empty_gif_module
+--with-stream
+"""
+
+
+# Selecting the NGINX Modules to Build 
+
+http_access_module 	Accepts or denies requests from specified client addresses.
+http_auth_basic_module 	Limits access to resources by validating the user name and password using the HTTP Basic Authentication protocol.
+http_autoindex_module 	Processes requests ending with the forward-slash character (/) and produces a directory listing.
+http_browser_module 	Creates variables whose values depend on the value of the User-Agent request header.
+http_charset_module 	Adds the specified character set to the Content-Type response header. Can convert data from one character set to another.
+http_empty_gif_module 	Emits a single-pixel transparent GIF.
+http_fastcgi_module 	Passes requests to a FastCGI server.
+http_geo_module 	Creates variables with values that depend on the client IP address.
+http_gzip_module 	Compresses responses using gzip, reducing the amount of transmitted data by half or more.
+http_limit_conn_module 	Limits the number of connections per a defined key, in particular, the number of connections from a single IP address.
+http_limit_req_module 	Limits the request processing rate per a defined key, in particular, the processing rate of requests coming from a single IP address.
+http_map_module 	Creates variables whose values depend on the values of other variables.
+http_memcached_module 	Passes requests to a memcached server.
+http_proxy_module 	Passes HTTP requests to another server.
+http_referer_module 	Blocks requests with invalid values in the Referer header.
+http_rewrite_module 	Changes the request URI using regular expressions and return redirects; conditionally selects configurations. Requires the PCRE library.
+http_scgi_module 	Passes requests to an SCGI server.
+http_ssi_module 	Processes SSI (Server Side Includes) commands in responses passing through it.
+http_split_clients_module 	Creates variables suitable for A/B testing, also known as split testing.
+http_upstream_hash_module 	Enables the generic Hash load-balancing method.
+http_upstream_ip_hash_module 	Enables the IP Hash load-balancing method.
+http_upstream_keepalive_module 	Enables keepalive connections.
+http_upstream_least_conn_module 	Enables the Least Connections load-balancing method.
+http_upstream_zone_module 	Enables shared memory zones.
+http_userid_module 	Sets cookies suitable for client identification.
+http_uwsgi_module 	Passes requests to a uwsgi server.
+
+
+
+# Configuring NGINX Paths
+
+--prefix=<PATH> 	Directory for NGINX files, and the base location for all relative paths set by the other configure script options (excluding paths to libraries) and for the path to the nginx.conf configuration file.
+			Default: /usr/local/nginx.
+
+--sbin-path=<PATH> 	Name of the NGINX executable file, which is used only during installation. 
+			Default: **/sbin/nginx
+
+--conf-path=<PATH> 	Name of the NGINX configuration file. You can, however, always override this value at startup by specifying a different file with the -c <FILENAME> option on the nginx command line. 
+			Default: **conf/nginx.conf
+--pid-path=<PATH> 	Name of the nginx.pid file, which stores the process ID of the nginx master process. After installation, the path to the filename can be changed with the pid directive in the NGINX configuration file. 
+			Default: **/logs/nginx.pid
+--error-log-path=<PATH> Name of the primary log file for errors, warnings, and diagnostic data. After installation, the filename can be changed with the error_log directive in the NGINX configuration file. 
+			Default: **/logs/error.log
+--http-log-path=<PATH> 	Name of the primary log file for requests to the HTTP server. After installation, the filename can always be changed with the access_log directive in the NGINX configuration file. 
+			Default: **/logs/access.log
+--user=<NAME> 		Name of the unprivileged user whose credentials are used by the NGINX worker processes. After installation, the name can be changed with the user directive in the NGINX configuration file. 
+			Default: nobody
+--group=<NAME> 		Name of the group whose credentials are used by the NGINX worker processes. After installation, the name can be changed with the user directive in the NGINX configuration file. 
+			Default: the value set by the --user option.
+--with-pcre=<PATH> 	Path to the source for the PCRE library, which is required for regular expressions support in the location directive and the Rewrite module.
+--with-pcre-jit 	Builds the PCRE library with “just-in-time compilation” support (the pcre_jit directive).
+--with-zlib=<PATH> 	Path to the source for the zlib library, which is required by the Gzip module.
+
+
+
+# Specifying NGINX Connection Processing Methods
+
+--with-select_module, 
+--without-select_module 	Enables or disables building a module that enable NGINX to work with the select() method. The modules is built automatically if the platform does not appear to support more appropriate 
+				methods such as kqueue, epoll, or /dev/poll.
+--with-poll_module, 
+--without-poll_module 		Enables or disables building a module that enables NGINX to work with the poll() method. The module is built automatically if the platform does not appear to support more appropriate 
+				methods such as kqueue, epoll, or /dev/poll.
+
+
+
+
+# look settings files
+ls -l /etc/nginx/
+
+
+
+
+
+# another method to install from centos-7
+sudo vim /etc/yum.repos.d/nginx.repo
+add to file """
+               [nginx]
+               name=nginx repo
+               baseurl=https://nginx.org/packeges/mainline/<OS>/<OSRELEASE>/$basearch/
+example:       baseurl=https://nginx.org/packeges/mainline/centos/7/$basearch/
+               gpgcheck=0
+               enabled=1
+            """
+
+
+
+
